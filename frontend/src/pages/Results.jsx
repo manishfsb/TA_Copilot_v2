@@ -74,7 +74,7 @@ export default function Results() {
   const {
     student_name, student_id, total_score, max_score, flagged, flag_reason,
     question_grades, graded_at, assignment_id, finalized, finalized_at, status,
-    current_question_label
+    current_question_label, submitted_at
   } = submission
 
   // Active grading state — show the animated loader with live progress
@@ -188,6 +188,8 @@ export default function Results() {
           <PaperViewer
             submissionId={submissionId}
             assignmentId={assignment_id}
+            studentName={student_name}
+            submittedAt={submitted_at}
           />
         </div>
       </div>

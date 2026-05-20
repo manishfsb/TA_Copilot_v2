@@ -7,11 +7,14 @@ const API = 'http://localhost:8000'
  * and the assignment's solution set. Sticky so it stays visible while the
  * score breakdown is scrolled. Browser handles native PDF rendering.
  */
-export default function PaperViewer({ submissionId, assignmentId }) {
+export default function PaperViewer({ submissionId, assignmentId, studentName, submittedAt }) {
   const [view, setView] = useState('student')   // 'student' | 'solution'
 
+  // submittedAt is used as a cache-buster so the browser never serves a stale
+  // PDF if a submission ID gets reused after a DB reset.
+  const cacheBuster = submittedAt ? `?t=${encodeURIComponent(submittedAt)}` : ''
   const url = view === 'student'
-    ? `${API}/files/submission/${submissionId}`
+    ? `${API}/files/submission/${submissionId}${cacheBuster}`
     : `${API}/files/solution/${assignmentId}`
 
   return (
@@ -40,15 +43,22 @@ export default function PaperViewer({ submissionId, assignmentId }) {
         />
       </div>
 
-      {/* Open in new tab — fallback if browser can't render inline */}
-      <a
-        href={url}
-        target="_blank"
-        rel="noreferrer"
-        className="text-xs text-gray-400 hover:text-blue-500 text-center"
-      >
-        Open in new tab ↗
-      </a>
+      {/* File identity — lets TA verify which file is loaded */}
+      <div className="flex items-center justify-between text-xs text-gray-400">
+        {view === 'student' && studentName && (
+          <span className="font-mono bg-gray-100 px-2 py-0.5 rounded">
+            submission #{submissionId} · {studentName}
+          </span>
+        )}
+        <a
+          href={url}
+          target="_blank"
+          rel="noreferrer"
+          className="ml-auto hover:text-blue-500"
+        >
+          Open in new tab ↗
+        </a>
+      </div>
     </div>
   )
 }
