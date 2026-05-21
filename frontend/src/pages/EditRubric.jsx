@@ -37,7 +37,7 @@ export default function EditRubric() {
     })
     setSaving(false)
     if (res.ok) {
-      setMsg('Rubric saved. Existing grades unchanged — use the Re-grade button on a submission to apply.')
+      setMsg('Rubric saved. Existing grades unchanged - use the Re-grade button on a submission to apply.')
     } else {
       setMsg('Failed to save. Check backend logs.')
     }
@@ -45,7 +45,7 @@ export default function EditRubric() {
 
   const regradeAll = async () => {
     if (!window.confirm(`Re-grade ALL ${assignment.submissions?.length || 0} submissions for "${assignment.name}"? This will queue grading jobs for each student.`)) return
-    setMsg('Queuing re-grades…')
+    setMsg('Queuing re-grades...')
     for (const sub of (assignment.submissions || [])) {
       if (!sub.finalized) {
         await fetch(`${API}/grades/submission/${sub.id}/regrade`, { method: 'POST' })
@@ -54,11 +54,11 @@ export default function EditRubric() {
     setMsg('Re-grade jobs queued. Refresh the dashboard in a minute to see updated scores.')
   }
 
-  if (!assignment) return <p className="text-gray-400 text-sm">Loading…</p>
+  if (!assignment) return <p className="text-gray-400 text-sm">Loading...</p>
 
   return (
     <div className="max-w-3xl mx-auto flex flex-col gap-4">
-      <Link to="/" className="text-sm text-blue-500 hover:underline">← Back to dashboard</Link>
+      <Link to="/" className="text-sm text-blue-500 hover:underline"><- Back to dashboard</Link>
 
       <div className="flex items-center justify-between">
         <div>
@@ -78,7 +78,7 @@ export default function EditRubric() {
             disabled={saving || rubric.length === 0}
             className="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-blue-700 disabled:opacity-40"
           >
-            {saving ? 'Saving…' : 'Save rubric'}
+            {saving ? 'Saving...' : 'Save rubric'}
           </button>
         </div>
       </div>
@@ -92,7 +92,7 @@ export default function EditRubric() {
       <div className="bg-yellow-50 border border-yellow-200 rounded-lg px-4 py-3 text-sm text-yellow-800">
         <strong>Note:</strong> Saving the rubric does NOT automatically re-grade existing submissions.
         Use "Re-grade all" above, or open an individual submission and click Re-grade there.
-        Finalized submissions are skipped — unfinalize them first if you need to re-grade.
+        Finalized submissions are skipped - unfinalize them first if you need to re-grade.
       </div>
 
       <RubricEditor rubric={rubric} onChange={setRubric} />

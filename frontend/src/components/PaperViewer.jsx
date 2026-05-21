@@ -47,7 +47,7 @@ export default function PaperViewer({ submissionId, assignmentId, studentName, s
       <div className="flex items-center justify-between text-xs text-gray-400">
         {view === 'student' && studentName && (
           <span className="font-mono bg-gray-100 px-2 py-0.5 rounded">
-            submission #{submissionId} · {studentName}
+            submission #{submissionId} | {studentName}
           </span>
         )}
         <a
@@ -56,7 +56,7 @@ export default function PaperViewer({ submissionId, assignmentId, studentName, s
           rel="noreferrer"
           className="ml-auto hover:text-blue-500"
         >
-          Open in new tab ↗
+          Open in new tab
         </a>
       </div>
     </div>

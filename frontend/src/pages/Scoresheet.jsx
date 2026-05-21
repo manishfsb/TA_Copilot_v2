@@ -29,7 +29,7 @@ export default function Scoresheet() {
       })
   }, [submissionId])
 
-  if (!submission || !assignment) return <p className="text-gray-400 text-sm">Loading…</p>
+  if (!submission || !assignment) return <p className="text-gray-400 text-sm">Loading...</p>
 
   const { student_name, student_id, total_score, max_score, finalized, finalized_at, question_grades, graded_at } = submission
   const pct = max_score ? Math.round((total_score / max_score) * 100) : null
@@ -42,7 +42,7 @@ export default function Scoresheet() {
       {/* Top action bar — hidden when printing */}
       <div className="print:hidden flex items-center justify-between mb-6 gap-3">
         <Link to={`/results/${submissionId}`} className="text-sm text-blue-500 hover:underline">
-          ← Back to Results
+          <- Back to Results
         </Link>
         <div className="flex items-center gap-3">
           {!finalized && (
@@ -147,7 +147,7 @@ function FinalizeButton({ submissionId, onFinalized }) {
       disabled={busy}
       className="bg-green-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-green-700 disabled:opacity-50"
     >
-      {busy ? 'Finalizing…' : 'Finalize'}
+      {busy ? 'Finalizing...' : 'Finalize'}
     </button>
   )
 }

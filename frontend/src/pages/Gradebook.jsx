@@ -15,7 +15,7 @@ export default function Gradebook() {
     fetch(`${API}/grades/gradebook`).then(r => r.json()).then(setData)
   }, [])
 
-  if (!data) return <p className="text-gray-400 text-sm">Loading…</p>
+  if (!data) return <p className="text-gray-400 text-sm">Loading...</p>
 
   const { assignments, students } = data
 
@@ -49,7 +49,7 @@ export default function Gradebook() {
         <div>
           <h1 className="text-2xl font-bold text-gray-900">Gradebook</h1>
           <p className="text-sm text-gray-500 mt-1">
-            {students.length} students · {assignments.length} assignments
+            {students.length} students - {assignments.length} assignments
           </p>
         </div>
         <button
@@ -96,7 +96,7 @@ export default function Gradebook() {
                         return <GradeCell key={a.id} cell={cell} />
                       })}
                       <td className="text-center px-3 py-3 font-bold text-blue-700 bg-blue-50">
-                        {avg !== null ? `${avg}%` : '—'}
+                        {avg !== null ? `${avg}%` : '-'}
                       </td>
                     </tr>
                   )
@@ -112,7 +112,7 @@ export default function Gradebook() {
 
 function GradeCell({ cell }) {
   if (!cell) {
-    return <td className="text-center px-3 py-3 text-gray-300">—</td>
+    return <td className="text-center px-3 py-3 text-gray-300">-</td>
   }
   const colorClass = cell.flagged
     ? 'text-red-600'
@@ -126,7 +126,7 @@ function GradeCell({ cell }) {
         className={`hover:underline ${colorClass}`}
         title={cell.flagged ? 'Needs review' : cell.finalized ? 'Finalized' : 'Graded'}
       >
-        {cell.pct !== null ? `${cell.pct}%` : '—'}
+        {cell.pct !== null ? `${cell.pct}%` : '-'}
       </Link>
     </td>
   )

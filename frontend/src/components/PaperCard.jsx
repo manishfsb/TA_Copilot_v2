@@ -9,7 +9,7 @@ const STATUS_STYLES = {
 
 const STATUS_LABEL = {
   pending: 'Pending',
-  grading: 'Grading…',
+  grading: 'Grading...',
   done:    'Done',
   flagged: 'Needs Review',
 }
@@ -67,7 +67,7 @@ export default function PaperCard({ submission }) {
           to={`/results/${id}`}
           className="mt-auto text-sm text-blue-600 hover:text-blue-800 font-medium hover:underline"
         >
-          {finalized ? 'View scoresheet →' : 'View breakdown →'}
+          {finalized ? 'View scoresheet ->' : 'View breakdown ->'}
         </Link>
       )}
     </div>

@@ -82,11 +82,11 @@ export default function Results() {
     const subtitle = current_question_label
       ? `Grading ${current_question_label}`
       : status === 'pending'
-        ? `${student_name} — queued, waiting for an earlier paper to finish`
-        : `${student_name} — extracting handwriting`
+        ? `${student_name} - queued, waiting for an earlier paper to finish`
+        : `${student_name} - extracting handwriting`
     return (
       <div className="flex flex-col gap-4">
-        <Link to="/" className="text-sm text-blue-500 hover:underline">← Back to dashboard</Link>
+        <Link to="/" className="text-sm text-blue-500 hover:underline"><- Back to dashboard</Link>
         <StatsLoader
           title={`Grading ${student_name}`}
           subtitle={subtitle}
@@ -112,7 +112,7 @@ export default function Results() {
     <div className="flex flex-col gap-4">
       {/* Top action bar */}
       <div className="flex items-center justify-between gap-2">
-        <Link to="/" className="text-sm text-blue-500 hover:underline">← Back to dashboard</Link>
+        <Link to="/" className="text-sm text-blue-500 hover:underline"><- Back to dashboard</Link>
         <div className="flex items-center gap-2">
           <button
             onClick={handleRegrade}

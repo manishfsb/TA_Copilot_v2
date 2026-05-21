@@ -61,7 +61,7 @@ export default function RubricEditor({ rubric, onChange }) {
   return (
     <div className="flex flex-col gap-3">
       <div className="bg-blue-50 border border-blue-200 rounded-lg px-4 py-2 text-sm text-blue-800 flex items-center justify-between gap-3">
-        <span>Review each question below. Edit anything Claude got wrong — labels, answer text, type, or whether it needs manual grading. All questions are worth 100 pts automatically.</span>
+        <span>Review each question below. Edit anything Claude got wrong - labels, answer text, type, or whether it needs manual grading. All questions are worth 100 pts automatically.</span>
         {rubric.length > 1 && (
           <button
             onClick={allCollapsed ? expandAll : collapseAll}
@@ -236,14 +236,14 @@ function RubricRow({ item, expanded, onToggleExpand, onChange, onDelete }) {
           className="text-gray-300 hover:text-red-400 text-lg leading-none"
           title="Remove question"
         >
-          ×
+          x
         </button>
       </div>
 
       {/* Expanded correct answer editor */}
       {expanded && (
         <div className="px-4 pb-4 border-t border-gray-100 pt-3 flex flex-col gap-2">
-          <label className="text-xs font-medium text-gray-500">Correct answer (Claude's extraction — edit if wrong)</label>
+          <label className="text-xs font-medium text-gray-500">Correct answer (Claude's extraction - edit if wrong)</label>
           <textarea
             rows={4}
             value={item.correct_answer}
@@ -252,7 +252,7 @@ function RubricRow({ item, expanded, onToggleExpand, onChange, onDelete }) {
           />
           {isManual && (
             <p className="text-xs text-orange-600 bg-orange-50 rounded px-2 py-1">
-              Manual grading — this question will be flagged for your review after OCR. Enter the score yourself in the Results page.
+              Manual  grading - this question will be flagged for your review after OCR. Enter the score yourself in the Results page.
             </p>
           )}
         </div>

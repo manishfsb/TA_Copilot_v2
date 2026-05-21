@@ -6,7 +6,7 @@
  *   - title:    main message (e.g. "Grading paper", "Loading…")
  *   - subtitle: small detail (e.g. "Currently on Problem 3 (b)", student name)
  */
-export default function StatsLoader({ title = 'Loading…', subtitle = null }) {
+export default function StatsLoader({ title = 'Loading...', subtitle = null }) {
   return (
     <div className="flex flex-col items-center justify-center min-h-[calc(100vh-12rem)] gap-8 select-none">
       <BellCurveAnimation />

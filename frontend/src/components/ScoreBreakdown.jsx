@@ -60,7 +60,7 @@ function QuestionRow({ grade, rubricItem, onOverride, onFeedback }) {
 
       {manually_graded && (
         <p className="text-xs text-red-600 mt-2 bg-red-50 rounded px-2 py-1">
-          Diagram answer — enter the score manually below after reviewing the student's paper.
+          Diagram answer - enter the score manually below after reviewing the student's paper.
         </p>
       )}
 
@@ -190,7 +190,7 @@ function FeedbackInput({ current, onSave }) {
             e.currentTarget.blur()
           }
         }}
-        placeholder="Add a comment for this question — saved automatically"
+        placeholder="Add a comment for this question - saved automatically"
         className="border border-gray-200 rounded px-2 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400 resize-y bg-gray-50"
       />
     </div>

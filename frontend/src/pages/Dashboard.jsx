@@ -130,7 +130,7 @@ export default function Dashboard() {
           <p className="text-lg font-medium text-gray-500">No assignments yet</p>
           <p className="text-sm">Upload a solution set to get started.</p>
           <Link to="/upload" className="mt-2 bg-blue-600 text-white px-5 py-2 rounded-lg text-sm font-medium hover:bg-blue-700 transition-colors">
-            Create first assignment →
+            Create first assignment ->
           </Link>
         </div>
       )}
@@ -148,7 +148,7 @@ export default function Dashboard() {
                   <h2 className="text-lg font-bold text-gray-900">{selectedAssignment.name}</h2>
                   <p className="text-sm text-gray-400 mt-0.5">
                     {gradedCount} of {totalCount} graded
-                    {pending.length > 0 && ` · ${pending.length} in queue`}
+                    {pending.length > 0 && ` - ${pending.length} in queue`}
                   </p>
                 </div>
                 {avgPct !== null && (
@@ -252,7 +252,7 @@ export default function Dashboard() {
           <p className="text-base font-medium text-gray-500">No submissions yet for {selectedAssignment.name}</p>
           <p className="text-sm">Drop student papers to start grading.</p>
           <Link to="/upload" className="mt-2 bg-blue-600 text-white px-5 py-2 rounded-lg text-sm font-medium hover:bg-blue-700 transition-colors">
-            Upload papers →
+            Upload papers ->
           </Link>
         </div>
       )}
@@ -272,7 +272,7 @@ function GradingProgress({ submissions, currentlyGrading }) {
           <Spinner />
           <div>
             <p className="text-sm font-semibold text-blue-900">
-              Grading in progress — {finished} of {total} complete
+              Grading in progress - {finished} of {total} complete
             </p>
             {currentlyGrading && (
               <p className="text-xs text-blue-700 mt-0.5">
@@ -314,7 +314,7 @@ function ScoreChart({ binCounts, maxBinCount, total }) {
               {/* Tooltip */}
               {count > 0 && (
                 <div className="absolute bottom-full mb-1 hidden group-hover:flex bg-gray-800 text-white text-xs rounded px-1.5 py-0.5 whitespace-nowrap z-10">
-                  {count} student{count !== 1 ? 's' : ''} · {pct}–{pct + 9}%
+                  {count} student{count !== 1 ? 's' : ''} - {pct}-{pct + 9}%
                 </div>
               )}
               <div

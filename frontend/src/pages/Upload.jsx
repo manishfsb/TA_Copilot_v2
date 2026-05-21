@@ -5,7 +5,7 @@ import RubricEditor from '../components/RubricEditor'
 const API = 'http://localhost:8000'
 
 // Step 1: choose existing assignment OR start creating a new one
-// Step 2 (new only): upload solution set → Claude parses it → TA reviews rubric + sets points
+// Step 2 (new only): upload solution set -> Claude parses it -> TA reviews rubric + sets points
 // Step 3: drop student papers, confirm names, submit
 
 export default function Upload() {
@@ -184,7 +184,7 @@ export default function Upload() {
                 ))}
               </select>
               <p className="text-xs text-gray-400">
-                The solution set and rubric are already saved — you'll go straight to uploading student papers.
+                The solution set and rubric are already saved - you'll go straight to uploading student papers.
               </p>
             </div>
           )}
@@ -193,7 +193,7 @@ export default function Upload() {
             <div className="flex flex-col gap-3">
               {assignments.length === 0 && (
                 <p className="text-sm text-gray-600">
-                  Welcome — let's create your first assignment. Upload the solution set and Claude will parse it into a rubric.
+                  Welcome - let's create your first assignment. Upload the solution set and Claude will parse it into a rubric.
                 </p>
               )}
               <input
@@ -220,7 +220,7 @@ export default function Upload() {
                     }}
                     className="text-amber-900 underline whitespace-nowrap font-medium hover:text-amber-700"
                   >
-                    Use existing →
+                    Use existing ->
                   </button>
                 </div>
               )}
@@ -271,7 +271,7 @@ export default function Upload() {
 
           {parsing && (
             <div className="bg-white rounded-xl border border-gray-200 p-8 text-center">
-              <p className="text-blue-600 font-medium animate-pulse">Reading solution set…</p>
+              <p className="text-blue-600 font-medium animate-pulse">Reading solution set...</p>
               <p className="text-xs text-gray-400 mt-2">Claude is extracting each problem and sub-part</p>
             </div>
           )}
@@ -295,7 +295,7 @@ export default function Upload() {
                   disabled={savingAssignment || rubric.length === 0}
                   className="flex-2 bg-blue-600 text-white py-2 px-6 rounded-lg font-medium hover:bg-blue-700 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
                 >
-                  {savingAssignment ? 'Saving…' : 'Save assignment & continue'}
+                  {savingAssignment ? 'Saving...' : 'Save assignment & continue'}
                 </button>
               </div>
             </>
@@ -314,7 +314,7 @@ export default function Upload() {
             className="border-2 border-dashed border-blue-300 rounded-xl p-10 text-center bg-blue-50 hover:bg-blue-100 transition-colors cursor-pointer"
           >
             <p className="text-blue-600 font-medium">Drop student papers here</p>
-            <p className="text-xs text-gray-400 mt-1">PDF, JPG, or PNG — one file per student</p>
+            <p className="text-xs text-gray-400 mt-1">PDF, JPG, or PNG - one file per student</p>
             <input
               id="paper-input"
               type="file"
@@ -353,7 +353,7 @@ export default function Upload() {
                   <button
                     onClick={() => setSubmissions((p) => p.filter((x) => x.id !== s.id))}
                     className="text-gray-300 hover:text-red-400 text-xl leading-none"
-                  >×</button>
+                  >x</button>
                 </div>
               ))}
             </div>
@@ -365,7 +365,7 @@ export default function Upload() {
             className="bg-blue-600 text-white py-3 rounded-xl font-semibold hover:bg-blue-700 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
           >
             {uploading
-              ? 'Uploading…'
+              ? 'Uploading...'
               : `Grade ${submissions.length} submission${submissions.length !== 1 ? 's' : ''}`}
           </button>
 
@@ -373,10 +373,10 @@ export default function Upload() {
             <div className="flex flex-col gap-2">
               {results.map((r, i) => (
                 <div key={i} className={`text-sm px-4 py-2 rounded-lg ${r.ok ? 'bg-green-50 text-green-700' : 'bg-red-50 text-red-700'}`}>
-                  {r.ok ? '✓' : '✗'} {r.name} — {r.ok ? 'queued for grading' : (r.detail || 'upload failed')}
+                  {r.ok ? 'OK' : 'X'} {r.name} - {r.ok ? 'queued for grading' : (r.detail || 'upload failed')}
                 </div>
               ))}
-              <p className="text-xs text-gray-400 text-center mt-1">Redirecting to dashboard…</p>
+              <p className="text-xs text-gray-400 text-center mt-1">Redirecting to dashboard...</p>
             </div>
           )}
         </div>
@@ -401,7 +401,7 @@ function StepIndicator({ current, mode }) {
           <div key={label} className="flex items-center gap-2">
             <div className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold
               ${done ? 'bg-green-500 text-white' : active ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-500'}`}>
-              {done ? '✓' : i + 1}
+              {done ? 'v' : i + 1}
             </div>
             <span className={`text-sm ${active ? 'font-medium text-gray-800' : 'text-gray-400'}`}>{label}</span>
             {i < steps.length - 1 && <div className="w-8 h-px bg-gray-200" />}
