@@ -8,7 +8,7 @@ Originally built for 'Statistical Analysis of Engineering Systems' - a 40-studen
 
 ## Walkthrough
 
-![TA Copilot walkthrough](./TA_Copilot.gif)
+![TA Copilot walkthrough](./gifs/TA_Copilot.gif)
 
 The TA uploads a solution set, reviews the auto-extracted rubric, drops in student papers, and reviews the results. Flagged papers (low-confidence OCR or diagram answers) are surfaced at the top of the dashboard so they get attention first.
 
