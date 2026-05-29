@@ -12,7 +12,7 @@ DB_PATH="$ROOT_DIR/autograder.db"
 BACKUP_DIR="$ROOT_DIR/backups"
 
 if [[ ! -f "$DB_PATH" ]]; then
-  echo "No database at $DB_PATH — nothing to back up."
+  echo "No database at $DB_PATH - nothing to back up."
   exit 0
 fi
 

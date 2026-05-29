@@ -24,7 +24,7 @@ const BLANK_ITEM = {
 
 export default function RubricEditor({ rubric, onChange }) {
   // Track which rows have been EXPLICITLY collapsed. Defaulting to a Set means
-  // all rows are expanded by default — and multiple can be expanded at once.
+  // all rows are expanded by default - and multiple can be expanded at once.
   const [collapsed, setCollapsed] = useState(() => new Set())
   const [adding, setAdding] = useState(false)
   const [newItem, setNewItem] = useState({ ...BLANK_ITEM })
@@ -176,20 +176,20 @@ function RubricRow({ item, expanded, onToggleExpand, onChange, onDelete }) {
 
   return (
     <div className={`bg-white rounded-xl border ${isManual ? 'border-orange-200' : 'border-gray-200'}`}>
-      {/* Header row — always visible */}
+      {/* Header row - always visible */}
       <div className="flex items-center gap-3 px-4 py-3">
 
-        {/* Key badge — editable */}
+        {/* Key badge - editable */}
         <div className="flex-shrink-0">
           <input
-            title="Matching key — must match what the OCR will label this question"
+            title="Matching key - must match what the OCR will label this question"
             value={item.question_key}
             onChange={e => onChange({ question_key: e.target.value })}
             className="w-20 text-xs font-mono bg-gray-100 border border-gray-200 rounded px-1.5 py-1 focus:outline-none focus:ring-1 focus:ring-blue-400 text-center"
           />
         </div>
 
-        {/* Label — editable */}
+        {/* Label - editable */}
         <input
           value={item.problem_label}
           onChange={e => onChange({ problem_label: e.target.value })}
@@ -197,7 +197,7 @@ function RubricRow({ item, expanded, onToggleExpand, onChange, onDelete }) {
           placeholder="Problem label"
         />
 
-        {/* Sub-part — editable */}
+        {/* Sub-part - editable */}
         <input
           value={item.sub_part || ''}
           onChange={e => onChange({ sub_part: e.target.value || null })}

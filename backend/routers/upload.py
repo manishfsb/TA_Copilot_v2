@@ -105,11 +105,11 @@ async def _run_grading_inner(submission_id: int, rubric: list[dict]):
             if not ocr_results:
                 submission.status = "flagged"
                 submission.flagged = True
-                submission.flag_reason = "OCR returned no text — file may be unreadable or blank"
+                submission.flag_reason = "OCR returned no text - file may be unreadable or blank"
                 await db.commit()
                 return
 
-            # Update DB before each question is graded — surfaces in the Results loader
+            # Update DB before each question is graded - surfaces in the Results loader
             async def on_question_start(q_key: str, label: str):
                 submission.current_question_key = q_key
                 submission.current_question_label = label
@@ -168,7 +168,7 @@ async def _run_grading_inner(submission_id: int, rubric: list[dict]):
                 flag_reasons.append("One or more answers need manual review (low OCR confidence or diagram answer)")
             if presentation_warning:
                 flag_reasons.append(
-                    f"Paper-wide OCR confidence is low ({round(avg_confidence * 100)}%) — "
+                    f"Paper-wide OCR confidence is low ({round(avg_confidence * 100)}%) - "
                     "paper may be disorganized or hard to read. Consider a presentation penalty."
                 )
 

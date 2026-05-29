@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import ScoreBreakdown from '../components/ScoreBreakdown'
-import PaperViewer from '../components/PaperViewer'
+import DocPane from '../components/DocPane'
 import StatsLoader from '../components/StatsLoader'
 
 const API = 'http://localhost:8000'
@@ -11,6 +11,7 @@ export default function Results() {
   const { submissionId } = useParams()
   const [submission, setSubmission] = useState(null)
   const [rubricMap, setRubricMap] = useState({})    // question_key → rubric item
+  const [solutionPath, setSolutionPath] = useState('')
   const [loading, setLoading] = useState(true)
   const [overrideMsg, setOverrideMsg] = useState('')
   const intervalRef = useRef(null)
@@ -27,6 +28,7 @@ export default function Results() {
           map[item.question_key] = item
         }
         setRubricMap(map)
+        setSolutionPath(assignment.solution_set_path || '')
       })
       .finally(() => setLoading(false))
   }
@@ -65,7 +67,7 @@ export default function Results() {
       `${API}/grades/submission/${submissionId}/feedback?question_key=${encodeURIComponent(questionKey)}&feedback=${encodeURIComponent(feedback)}`,
       { method: 'PATCH' }
     )
-    // Quiet save — no toast. The textarea blur is the user's confirmation.
+    // Quiet save - no toast. The textarea blur is the user's confirmation.
   }
 
   if (loading) return <StatsLoader title="Loading paper" />
@@ -77,7 +79,7 @@ export default function Results() {
     current_question_label, submitted_at
   } = submission
 
-  // Active grading state — show the animated loader with live progress
+  // Active grading state - show the animated loader with live progress
   if (status === 'pending' || status === 'grading') {
     const subtitle = current_question_label
       ? `Grading ${current_question_label}`
@@ -86,7 +88,7 @@ export default function Results() {
         : `${student_name} - extracting handwriting`
     return (
       <div className="flex flex-col gap-4">
-        <Link to="/" className="text-sm text-blue-500 hover:underline"><- Back to dashboard</Link>
+        <Link to="/" className="text-sm text-blue-500 hover:underline">← Back to dashboard</Link>
         <StatsLoader
           title={`Grading ${student_name}`}
           subtitle={subtitle}
@@ -112,7 +114,7 @@ export default function Results() {
     <div className="flex flex-col gap-4">
       {/* Top action bar */}
       <div className="flex items-center justify-between gap-2">
-        <Link to="/" className="text-sm text-blue-500 hover:underline"><- Back to dashboard</Link>
+        <Link to="/" className="text-sm text-blue-500 hover:underline">← Back to dashboard</Link>
         <div className="flex items-center gap-2">
           <button
             onClick={handleRegrade}
@@ -131,67 +133,65 @@ export default function Results() {
         </div>
       </div>
 
-      {/* Two-column layout: breakdown left, paper viewer right */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-
-        {/* Left: header + breakdown */}
-        <div className="flex flex-col gap-4 min-w-0">
-          {/* Header */}
-          <div className="bg-white rounded-xl border border-gray-200 p-5">
-            <div className="flex items-start justify-between gap-4">
-              <div className="min-w-0">
-                <h1 className="text-xl font-bold text-gray-900 truncate">{student_name}</h1>
-                {student_id && (
-                  <p className="text-xs font-mono text-gray-500 mt-0.5">ID: {student_id}</p>
-                )}
-                {graded_at && (
-                  <p className="text-xs text-gray-400 mt-1">
-                    Graded {new Date(graded_at).toLocaleString()}
-                  </p>
-                )}
-              </div>
-              {pct !== null && (
-                <div className="text-right flex-shrink-0">
-                  <p className="text-3xl font-bold text-blue-700">{total_score}</p>
-                  <p className="text-sm text-gray-400">/ {max_score} pts ({pct}%)</p>
-                </div>
-              )}
-            </div>
-
-            {flagged && (
-              <div className="mt-4 bg-red-50 border border-red-200 rounded-lg px-3 py-2 text-sm text-red-700">
-                <span className="font-semibold">Flagged for review:</span> {flag_reason}
-              </div>
+      {/* Compact header */}
+      <div className="bg-white rounded-xl border border-gray-200 p-5">
+        <div className="flex items-start justify-between gap-4">
+          <div className="min-w-0">
+            <h1 className="text-xl font-bold text-gray-900 truncate">{student_name}</h1>
+            {student_id && (
+              <p className="text-xs font-mono text-gray-500 mt-0.5">ID: {student_id}</p>
+            )}
+            {graded_at && (
+              <p className="text-xs text-gray-400 mt-1">
+                Graded {new Date(graded_at).toLocaleString()}
+              </p>
             )}
           </div>
-
-          {overrideMsg && (
-            <div className="bg-green-50 border border-green-200 text-green-700 text-sm px-3 py-2 rounded-lg">
-              {overrideMsg}
+          {pct !== null && (
+            <div className="text-right flex-shrink-0">
+              <p className="text-3xl font-bold text-blue-700">{total_score}</p>
+              <p className="text-sm text-gray-400">/ {max_score} pts ({pct}%)</p>
             </div>
           )}
+        </div>
 
-          {/* Question breakdown */}
-          <div>
-            <h2 className="text-sm font-semibold text-gray-700 mb-3">Question Breakdown</h2>
-            <ScoreBreakdown
-              questionGrades={question_grades}
-              rubricMap={rubricMap}
-              onOverride={handleOverride}
-              onFeedback={handleFeedback}
-            />
+        {flagged && (
+          <div className="mt-4 bg-red-50 border border-red-200 rounded-lg px-3 py-2 text-sm text-red-700">
+            <span className="font-semibold">Flagged for review:</span> {flag_reason}
           </div>
-        </div>
+        )}
+      </div>
 
-        {/* Right: paper viewer (sticky) */}
-        <div className="min-w-0">
-          <PaperViewer
-            submissionId={submissionId}
-            assignmentId={assignment_id}
-            studentName={student_name}
-            submittedAt={submitted_at}
-          />
+      {overrideMsg && (
+        <div className="bg-green-50 border border-green-200 text-green-700 text-sm px-3 py-2 rounded-lg">
+          {overrideMsg}
         </div>
+      )}
+
+      {/* Papers row: student left, solution right - both visible, no toggle */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+        <DocPane
+          title={`${student_name} - submission`}
+          src={`${API}/files/submission/${submissionId}${submitted_at ? `?t=${encodeURIComponent(submitted_at)}` : ''}`}
+          heightClass="h-[55vh]"
+        />
+        <DocPane
+          title="Solution set"
+          src={`${API}/files/solution/${assignment_id}`}
+          unavailable={/\.docx$/i.test(solutionPath)}
+          heightClass="h-[55vh]"
+        />
+      </div>
+
+      {/* Question breakdown - one question at a time */}
+      <div>
+        <h2 className="text-sm font-semibold text-gray-700 mb-3">Question Breakdown</h2>
+        <ScoreBreakdown
+          questionGrades={question_grades}
+          rubricMap={rubricMap}
+          onOverride={handleOverride}
+          onFeedback={handleFeedback}
+        />
       </div>
     </div>
   )

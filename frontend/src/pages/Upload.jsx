@@ -1,6 +1,7 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
 import RubricEditor from '../components/RubricEditor'
+import DocPane from '../components/DocPane'
 
 const API = 'http://localhost:8000'
 
@@ -31,6 +32,17 @@ export default function Upload() {
 
   const navigate = useNavigate()
 
+  // Preview the not-yet-saved solution file straight from browser memory so the TA
+  // can compare it against the parsed rubric. Revoked when the file changes/unmounts.
+  const solutionPreviewUrl = useMemo(
+    () => (solutionFile ? URL.createObjectURL(solutionFile) : null),
+    [solutionFile]
+  )
+  useEffect(() => {
+    return () => { if (solutionPreviewUrl) URL.revokeObjectURL(solutionPreviewUrl) }
+  }, [solutionPreviewUrl])
+  const solutionIsPdf = /\.pdf$/i.test(solutionFile?.name || '') || solutionFile?.type === 'application/pdf'
+
   useEffect(() => {
     fetch(`${API}/assignments/`)
       .then((r) => r.json())
@@ -42,7 +54,7 @@ export default function Upload() {
           setMode('existing')
           setSelectedAssignmentId(String(data[0].id))
         } else {
-          // First time using the app — force New mode
+          // First time using the app - force New mode
           setMode('new')
         }
       })
@@ -149,7 +161,7 @@ export default function Upload() {
   }
 
   return (
-    <div className="max-w-2xl mx-auto flex flex-col gap-6">
+    <div className={`${step === 2 && rubric.length > 0 ? 'max-w-6xl' : 'max-w-2xl'} mx-auto flex flex-col gap-6`}>
       {/* Step indicator */}
       <StepIndicator current={step} mode={mode} />
 
@@ -162,7 +174,7 @@ export default function Upload() {
       {/* ── Step 1 ── */}
       {step === 1 && (
         <div className="bg-white rounded-xl border border-gray-200 p-5 flex flex-col gap-4">
-          {/* Mode tabs — only shown when there's a meaningful choice */}
+          {/* Mode tabs - only shown when there's a meaningful choice */}
           {assignments.length > 0 && (
             <div className="flex gap-3">
               <ModeBtn active={mode === 'existing'} onClick={() => setMode('existing')} label="Add to existing" />
@@ -204,7 +216,7 @@ export default function Upload() {
                 className="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
               />
 
-              {/* Collision warning — prevents accidental duplicate HW1s */}
+              {/* Collision warning - prevents accidental duplicate HW1s */}
               {nameCollision && (
                 <div className="bg-amber-50 border border-amber-200 text-amber-900 text-sm px-3 py-2 rounded-lg flex items-center justify-between gap-3">
                   <span>
@@ -220,7 +232,7 @@ export default function Upload() {
                     }}
                     className="text-amber-900 underline whitespace-nowrap font-medium hover:text-amber-700"
                   >
-                    Use existing ->
+                    Use existing →
                   </button>
                 </div>
               )}
@@ -277,28 +289,38 @@ export default function Upload() {
           )}
 
           {rubric.length > 0 && (
-            <>
-              <div className="bg-amber-50 border border-amber-200 rounded-xl px-4 py-3 text-sm text-amber-800">
-                Set the point value for each question below. Diagram-only answers (like sample space plots) are marked as manual grading and worth 0 automatic points.
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 items-start">
+              {/* Left: rubric editor + controls */}
+              <div className="flex flex-col gap-4">
+                <div className="bg-amber-50 border border-amber-200 rounded-xl px-4 py-3 text-sm text-amber-800">
+                  Set the point value for each question below. Diagram-only answers (like sample space plots) are marked as manual grading and worth 0 automatic points.
+                </div>
+                <RubricEditor rubric={rubric} onChange={setRubric} />
+                {parseError && <p className="text-sm text-red-600">{parseError}</p>}
+                <div className="flex gap-3">
+                  <button
+                    onClick={() => { setRubric([]); setParseError('') }}
+                    className="flex-1 border border-gray-300 text-gray-600 py-2 rounded-lg font-medium hover:bg-gray-50 transition-colors"
+                  >
+                    Re-parse
+                  </button>
+                  <button
+                    onClick={handleSaveAssignment}
+                    disabled={savingAssignment || rubric.length === 0}
+                    className="flex-2 bg-blue-600 text-white py-2 px-6 rounded-lg font-medium hover:bg-blue-700 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+                  >
+                    {savingAssignment ? 'Saving...' : 'Save assignment & continue'}
+                  </button>
+                </div>
               </div>
-              <RubricEditor rubric={rubric} onChange={setRubric} />
-              {parseError && <p className="text-sm text-red-600">{parseError}</p>}
-              <div className="flex gap-3">
-                <button
-                  onClick={() => { setRubric([]); setParseError('') }}
-                  className="flex-1 border border-gray-300 text-gray-600 py-2 rounded-lg font-medium hover:bg-gray-50 transition-colors"
-                >
-                  Re-parse
-                </button>
-                <button
-                  onClick={handleSaveAssignment}
-                  disabled={savingAssignment || rubric.length === 0}
-                  className="flex-2 bg-blue-600 text-white py-2 px-6 rounded-lg font-medium hover:bg-blue-700 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
-                >
-                  {savingAssignment ? 'Saving...' : 'Save assignment & continue'}
-                </button>
-              </div>
-            </>
+
+              {/* Right: solution PDF to compare against */}
+              <DocPane
+                src={solutionPreviewUrl}
+                title="Solution set"
+                unavailable={!solutionIsPdf}
+              />
+            </div>
           )}
         </div>
       )}

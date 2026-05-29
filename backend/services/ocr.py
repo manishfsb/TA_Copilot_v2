@@ -32,7 +32,7 @@ Rules:
 - Extract the student's COMPLETE answer for each question, including intermediate steps and tables.
 - For tables: transcribe as tab-separated rows or describe the key values.
 - For diagrams or sketches with no extractable numbers: set text to "(diagram)" and confidence to 1.0.
-- Do NOT skip any question — if a question appears to be unanswered, still include it with text "(blank)".
+- Do NOT skip any question - if a question appears to be unanswered, still include it with text "(blank)".
 - Rounding: extract numbers exactly as written (e.g. "7.089", not "7.09").
 
 Common statistics symbols to watch for:

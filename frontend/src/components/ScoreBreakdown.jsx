@@ -1,20 +1,96 @@
 import { useState, useEffect } from 'react'
 
 export default function ScoreBreakdown({ questionGrades, rubricMap = {}, onOverride, onFeedback }) {
-  if (!questionGrades?.length) {
+  const count = questionGrades?.length || 0
+
+  // Show one question at a time. Default to the first flagged question - that's what
+  // the TA is here to review - falling back to the first question.
+  const [current, setCurrent] = useState(0)
+  useEffect(() => {
+    const firstFlagged = questionGrades?.findIndex((q) => q.flagged) ?? -1
+    setCurrent(firstFlagged >= 0 ? firstFlagged : 0)
+  }, [count])
+
+  if (!count) {
     return <p className="text-gray-400 text-sm">No question data available.</p>
   }
+
+  const safeIndex = Math.min(current, count - 1)
+  const q = questionGrades[safeIndex]
+  const label = (q.problem_label || q.question_key) + (q.sub_part ? ` (${q.sub_part})` : '')
+  const go = (i) => setCurrent(Math.max(0, Math.min(count - 1, i)))
+
+  // Navigate on pointer-down rather than click: committing a score fires an async
+  // override whose "Score updated" toast shifts the layout, which can move the button
+  // out from under a click and swallow it (so you'd have to click twice). Acting on
+  // pointer-down - and flushing the focused score/feedback edit ourselves - means a
+  // single press always saves the current edit AND advances.
+  const commitFocusedAndGo = (i) => {
+    const el = document.activeElement
+    if (el instanceof HTMLElement) el.blur()   // triggers the field's onBlur commit
+    go(i)
+  }
+  const navHandlers = (i, enabled = true) => ({
+    onPointerDown: (e) => { if (!enabled) return; e.preventDefault(); commitFocusedAndGo(i) },
+    onKeyDown: (e) => {
+      if (enabled && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); commitFocusedAndGo(i) }
+    },
+  })
+
   return (
-    <div className="flex flex-col gap-4">
-      {questionGrades.map((q) => (
-        <QuestionRow
-          key={q.id}
-          grade={q}
-          rubricItem={rubricMap[q.question_key]}
-          onOverride={onOverride}
-          onFeedback={onFeedback}
-        />
-      ))}
+    <div className="flex flex-col gap-3">
+      <QuestionRow
+        key={q.id}
+        grade={q}
+        rubricItem={rubricMap[q.question_key]}
+        onOverride={onOverride}
+        onFeedback={onFeedback}
+      />
+
+      {/* Navigator */}
+      <div className="flex items-center justify-between gap-3 bg-white border border-gray-200 rounded-xl px-3 py-2">
+        <button
+          {...navHandlers(safeIndex - 1, safeIndex > 0)}
+          disabled={safeIndex === 0}
+          className="text-sm px-3 py-1.5 rounded-lg border border-gray-200 text-gray-600 hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed"
+        >
+          ◀ Prev
+        </button>
+        <div className="text-sm text-gray-600 text-center min-w-0">
+          <span className="font-semibold text-gray-800">Question {safeIndex + 1} of {count}</span>
+          <span className="text-gray-400"> - </span>
+          <span className="truncate">{label}</span>
+        </div>
+        <button
+          {...navHandlers(safeIndex + 1, safeIndex < count - 1)}
+          disabled={safeIndex === count - 1}
+          className="text-sm px-3 py-1.5 rounded-lg border border-gray-200 text-gray-600 hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed"
+        >
+          Next ▶
+        </button>
+      </div>
+
+      {/* Jump strip - flagged questions tinted red, current highlighted */}
+      <div className="flex flex-wrap gap-1.5">
+        {questionGrades.map((g, i) => {
+          const isCurrent = i === safeIndex
+          const cls = isCurrent
+            ? 'bg-blue-600 text-white border-blue-600'
+            : g.flagged
+              ? 'bg-red-50 text-red-700 border-red-300 hover:border-red-400'
+              : 'bg-white text-gray-500 border-gray-200 hover:border-blue-400'
+          return (
+            <button
+              key={g.id}
+              {...navHandlers(i)}
+              title={(g.problem_label || g.question_key) + (g.flagged ? ' - needs review' : '')}
+              className={`w-7 h-7 text-xs font-medium rounded-md border transition-colors ${cls}`}
+            >
+              {i + 1}
+            </button>
+          )
+        })}
+      </div>
     </div>
   )
 }
@@ -64,7 +140,7 @@ function QuestionRow({ grade, rubricItem, onOverride, onFeedback }) {
         </p>
       )}
 
-      {/* Score input + TA feedback — both directly editable, no confirmation */}
+      {/* Score input + TA feedback - both directly editable, no confirmation */}
       <div className="mt-3 pt-3 border-t border-gray-200 flex flex-col gap-2">
         {onOverride && (
           <ScoreInput
@@ -114,7 +190,7 @@ function formatAnswerLines(text) {
     .map(s => s.trim())
     .filter(Boolean)
 
-  // Step 2: defensive fallback — if any line is still very long AND clearly
+  // Step 2: defensive fallback - if any line is still very long AND clearly
   // contains multiple equations (period + space + letter), split it again.
   // This catches edge cases where the data has unusual whitespace characters.
   lines = lines.flatMap(line => {
@@ -127,7 +203,7 @@ function formatAnswerLines(text) {
 }
 
 /**
- * Direct-overwrite score input. Saves on blur or Enter. No confirmation —
+ * Direct-overwrite score input. Saves on blur or Enter. No confirmation -
  * routine corrections shouldn't have friction.
  */
 function ScoreInput({ current, max, onSave }) {

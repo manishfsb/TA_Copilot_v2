@@ -39,10 +39,10 @@ export default function Scoresheet() {
 
   return (
     <div className="max-w-3xl mx-auto bg-white">
-      {/* Top action bar — hidden when printing */}
+      {/* Top action bar - hidden when printing */}
       <div className="print:hidden flex items-center justify-between mb-6 gap-3">
         <Link to={`/results/${submissionId}`} className="text-sm text-blue-500 hover:underline">
-          <- Back to Results
+           ← Back to Results
         </Link>
         <div className="flex items-center gap-3">
           {!finalized && (

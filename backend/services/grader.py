@@ -29,39 +29,39 @@ Score awarded: 100% (full credit)
 Reason: Student demonstrated understanding of the population vs. sample distinction and why the functions differ. For explanation questions, award full credit if the core statistical concept is present, even if the phrasing is imprecise or the direction is stated unclearly.
 
 --- EXAMPLE 3: Set/table answer, one of two required items wrong → 75% CREDIT ---
-Question: Ang and Tang 2.1 (a) — sample space of travel time from A to C
+Question: Ang and Tang 2.1 (a) - sample space of travel time from A to C
 Correct answer: T(A→C) = {8, 9, 10, 11, 12, 13, 14}
 Student wrote: listed {6,7,9,10,11} for A→B (correct) but listed only the B→C segment times {2,3} instead of the total A→C travel times
 Score awarded: 75%
 Reason: One of two required sample spaces was incorrect. The standard partial credit deduction in this course is 25% per significant error within a sub-part.
 
 --- EXAMPLE 4: Diagram answer, one element drawn incorrectly → 75% CREDIT ---
-Question: Ang and Tang 2.3 (b) — shade events E1, E2, E3 on sample space plot
+Question: Ang and Tang 2.3 (b) - shade events E1, E2, E3 on sample space plot
 Correct answer: E1=(V>35kph), E2=(15<V≤45kph), E3=(θ≤30°) all correctly shaded
 Student drew: E1 and E2 correctly, but E3 region was drawn in the wrong area
 Score awarded: 75%
 Reason: Two of three events correct. Same 25% per significant error convention.
 
 --- EXAMPLE 5: Histogram with frequency table → FULL CREDIT ---
-Question: Problem 4 (a) — construct histogram with 4 bins
+Question: Problem 4 (a) - construct histogram with 4 bins
 Correct answer: 0-8: 1/9=0.11, 9-16: 4/9=0.44, 17-24: 3/9=0.33, 25-32: 1/9=0.11
 Student answer: Frequency table with all correct bin boundaries and fractions, plus a matching hand-drawn histogram
 Score awarded: 100%
 Reason: Correct bin boundaries and frequency fractions in the table. The hand-drawn bar chart matched the table. Grade from the table; the visual is a secondary check.
 
 --- EXAMPLE 6: Histogram with wrong y-axis label but correct shape and bins → FULL CREDIT ---
-Question: Problem 4 (a) and (b) — construct histograms
+Question: Problem 4 (a) and (b) - construct histograms
 Correct answer: y-axis should show fraction of observations (e.g. 0.11, 0.44, 0.33, 0.11)
-Student answer: y-axis labeled "occurrences" showing raw counts (1, 4, 3, 1) instead of fractions — bin boundaries and bar heights otherwise correct
+Student answer: y-axis labeled "occurrences" showing raw counts (1, 4, 3, 1) instead of fractions - bin boundaries and bar heights otherwise correct
 Score awarded: 100%
 Reason: The bin boundaries and relative bar heights were correct. Labeling the y-axis as counts vs. fractions is a minor presentation issue, not a conceptual error. Full credit.
 
 --- EXAMPLE 7: Sample space given as range instead of enumerated set → 75% CREDIT ---
-Question: Ang and Tang 2.1 (c) — sample space of T (travel time) and C (cost) from A to C as pairs
+Question: Ang and Tang 2.1 (c) - sample space of T (travel time) and C (cost) from A to C as pairs
 Correct answer: {(8,1500), (9,1500), (10,1500), (11,850), (12,850), (13,850), (14,850)}
 Student wrote: "Sample space of T is 8h ≤ T ≤ 14h; Sample space of C is $850 ≤ C ≤ $1500"
 Score awarded: 75%
-Reason: Student identified the correct ranges but failed to enumerate the joint sample space as specific ordered pairs. The form of the answer was wrong — a continuous range instead of a discrete set. 25% deduction.
+Reason: Student identified the correct ranges but failed to enumerate the joint sample space as specific ordered pairs. The form of the answer was wrong - a continuous range instead of a discrete set. 25% deduction.
 
 PARTIAL CREDIT CONVENTION FOR THIS COURSE:
 - 1 significant error in a multi-element answer → 75%
@@ -117,7 +117,7 @@ Grade this answer. Max score is {rubric_item['max_score']} pts."""
 
 
 def _build_diagram_prompt(rubric_item: dict, ocr_result: dict) -> str:
-    """Prompt for diagram questions — Claude Vision already saw the image during OCR.
+    """Prompt for diagram questions - Claude Vision already saw the image during OCR.
     We grade based on what was extracted plus the low-confidence flag."""
     sub = f" ({rubric_item.get('sub_part')})" if rubric_item.get("sub_part") else ""
     return f"""Question: {rubric_item['problem_label']}{sub} [DIAGRAM ANSWER]
@@ -127,7 +127,7 @@ CORRECT ANSWER:
 {rubric_item['correct_answer']}
 
 WHAT THE STUDENT DREW (extracted from diagram):
-{ocr_result.get('text', '(diagram only — no text extracted)')}
+{ocr_result.get('text', '(diagram only - no text extracted)')}
 
 This is a diagram/sketch question. Grade based on the extracted description of what the student drew.
 If the extraction says "(diagram)" with no detail, set confidence=0.3 to flag for TA review.
@@ -150,7 +150,7 @@ async def grade_question(ocr_result: dict, rubric_item: dict, use_escalation: bo
             extracted_text=ocr_result.get("text", ""),
             score=0.0,
             max_score=max_score,
-            explanation="Requires manual grading — enter score above.",
+            explanation="Requires manual grading - enter score above.",
             confidence=1.0,
             flagged=True,
             manually_graded=True
@@ -168,12 +168,12 @@ async def grade_question(ocr_result: dict, rubric_item: dict, use_escalation: bo
                 extracted_text=ocr_result.get("text", ""),
                 score=max_score,
                 max_score=max_score,
-                explanation="Correct — mathematically equivalent to the solution.",
+                explanation="Correct - mathematically equivalent to the solution.",
                 confidence=ocr_confidence,
                 flagged=ocr_confidence < settings.confidence_threshold
             )
 
-    # LLM grading — use diagram prompt for diagram-type answers
+    # LLM grading - use diagram prompt for diagram-type answers
     # Diagrams always escalate to Sonnet for better spatial reasoning
     if is_diagram:
         model = settings.escalation_model
@@ -233,7 +233,7 @@ async def grade_question(ocr_result: dict, rubric_item: dict, use_escalation: bo
             extracted_text=ocr_result.get("text", ""),
             score=0.0,
             max_score=max_score,
-            explanation="Grading failed — manual review required.",
+            explanation="Grading failed - manual review required.",
             confidence=0.0,
             flagged=True
         )
@@ -280,7 +280,7 @@ async def grade_submission(
     rubric_map = {item["question_key"]: item for item in rubric}
     graded = []
 
-    # Collapse duplicates before grading — never grade the same key twice
+    # Collapse duplicates before grading - never grade the same key twice
     ocr_results = _merge_duplicate_ocr(ocr_results)
 
     for ocr_result in ocr_results:

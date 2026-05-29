@@ -38,7 +38,7 @@ function BellCurveAnimation() {
         {/* Axis */}
         <line x1="20" y1="120" x2="220" y2="120" stroke="#cbd5e1" strokeWidth="1" />
 
-        {/* Histogram bars underneath — gentle rise-fall */}
+        {/* Histogram bars underneath - gentle rise-fall */}
         {[
           { x: 40,  delay: 0.0, h: 25 },
           { x: 65,  delay: 0.2, h: 55 },

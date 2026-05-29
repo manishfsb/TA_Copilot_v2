@@ -182,7 +182,7 @@ async def update_feedback(
 
 @router.post("/submission/{submission_id}/finalize")
 async def finalize_submission(submission_id: int, db: AsyncSession = Depends(get_db)):
-    """Mark a submission as finalized — locks the scoresheet for export."""
+    """Mark a submission as finalized - locks the scoresheet for export."""
     result = await db.execute(select(Submission).where(Submission.id == submission_id))
     submission = result.scalar_one_or_none()
     if not submission:
@@ -226,7 +226,7 @@ async def regrade_submission(
     if not submission:
         raise HTTPException(status_code=404, detail="Submission not found")
     if submission.finalized:
-        raise HTTPException(status_code=400, detail="Submission is finalized — unfinalize first")
+        raise HTTPException(status_code=400, detail="Submission is finalized - unfinalize first")
 
     a_result = await db.execute(select(Assignment).where(Assignment.id == submission.assignment_id))
     assignment = a_result.scalar_one_or_none()

@@ -28,7 +28,7 @@ async def preview_rubric(solution_file: UploadFile = File(...)):
     """
     Step 1 of assignment creation: upload the solution set and get back a
     parsed rubric for TA review. Nothing is saved to the DB yet.
-    Point values (max_score) default to 0 — the TA sets them in the UI.
+    Point values (max_score) default to 0 - the TA sets them in the UI.
     """
     _check_extension(solution_file.filename)
 
@@ -75,7 +75,7 @@ async def create_assignment(
     db.add(assignment)
     await db.commit()
 
-    # Re-fetch with relationships loaded — db.refresh() alone won't load them
+    # Re-fetch with relationships loaded - db.refresh() alone won't load them
     # and SQLAlchemy async can't lazy-load outside the greenlet context
     result = await db.execute(
         select(Assignment)
@@ -118,7 +118,7 @@ async def update_rubric(
     Update an assignment's rubric after creation. Used when the TA discovers
     parser errors mid-grading (e.g. Claude missed a sub-part).
 
-    Existing question_grades are NOT auto-invalidated — the TA explicitly
+    Existing question_grades are NOT auto-invalidated - the TA explicitly
     triggers re-grade per submission via POST /grades/submission/{id}/regrade.
     """
     result = await db.execute(select(Assignment).where(Assignment.id == assignment_id))

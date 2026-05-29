@@ -6,7 +6,7 @@ and sub-part into a structured JSON format. This handles arbitrary formatting,
 mixed equation/table/diagram content, and labeling conventions like
 "Problem 1", "Ang and Tang problem 2.1", etc.
 
-Point values are NOT extracted here — they are assigned by the TA in the UI.
+Point values are NOT extracted here - they are assigned by the TA in the UI.
 """
 
 import anthropic
@@ -37,11 +37,11 @@ Rules:
 - A "sub-part" means a part EXPLICITLY labelled with (a), (b), (c), (d) in the solution set. Different calculation steps within ONE problem (e.g. mean → variance → std dev) are NOT sub-parts. They are intermediate steps of a single answer. Combine them into one object.
 - If a problem has explicit sub-parts (a), (b), (c), create a SEPARATE object for EACH sub-part.
 - Even if a sub-part's answer is purely a diagram with no text, INCLUDE IT. Write the correct_answer as a description of what the diagram should show (e.g. "Sketch of sample space: rectangle with V on x-axis from 0 to ∞, θ on y-axis from 0° to 90°").
-- If a problem has no sub-parts, create ONE object for the whole problem — even if it contains multiple equations or computations.
-- Do NOT create a parent object for a problem that has sub-parts — only leaf-level items.
+- If a problem has no sub-parts, create ONE object for the whole problem - even if it contains multiple equations or computations.
+- Do NOT create a parent object for a problem that has sub-parts - only leaf-level items.
 - NEVER output two items with the same question_key. NEVER output two items with the same problem_label AND sub_part combination. If you're tempted to, combine them into one.
 - Diagram-only sub-parts should still appear in the rubric with answer_type="diagram" and gradeable=true. Describe what the diagram represents in correct_answer so the TA can verify against the student's drawing.
-- Be generous with correct_answer — include all relevant content, not just the final number.
+- Be generous with correct_answer - include all relevant content, not just the final number.
 - Preserve mathematical relationships exactly as in the solution (e.g. "A = E_1 ∩ E_3", not "A = E_1 ∩ E_2"). Double-check intersections, unions, and subscripts.
 - Preserve mathematical equations (e.g. "x_bar = sum(xi)/n = 144/9 = 16").
 
@@ -177,7 +177,7 @@ def _parse_response(raw: str) -> list[dict]:
 async def parse_solution_set(file_path: str) -> list[dict]:
     """
     Main entry point. Accepts PDF or docx. Returns list of rubric item dicts.
-    Point values (max_score) are not set here — they default to 0 for TA to fill in.
+    Point values (max_score) are not set here - they default to 0 for TA to fill in.
     """
     path = Path(file_path)
     suffix = path.suffix.lower()
